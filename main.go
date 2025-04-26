@@ -35,8 +35,11 @@ func main() {
 		c.Next()
 	})
 
-	// Conectar ao banco
+	// Conectar ao banco de dados
 	database.ConnectDB()
+
+	// Conectar ao Redis
+	database.ConnectRedis()
 
 	auth := r.Group("/auth")
 

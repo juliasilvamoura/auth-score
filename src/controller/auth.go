@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -69,5 +70,19 @@ func Login(c *gin.Context) {
 }
 
 func Logout(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"message": "Logout efetuado. Apague o token no cliente!"})
+	authHeader := c.GetHeader("Authorization")
+	if authHeader == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Token não fornecido"})
+		return
+	}
+
+	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
+
+	// Adiciona o token à blacklist
+	if err := database.AddToBlacklist(tokenString, 24*time.Hour); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao invalidar o token"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Logout efetuado com sucesso. Token invalidado!"})
 }
