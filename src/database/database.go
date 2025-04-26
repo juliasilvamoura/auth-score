@@ -27,15 +27,6 @@ func ConnectDB() {
 		log.Fatal("Erro ao conectar ao banco de dados:", err)
 	}
 
-	// Criar extensões necessárias
-	DB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
-	DB.Exec("CREATE EXTENSION IF NOT EXISTS \"pgcrypto\"")
-
-	// Desabilita as foreign keys durante a migração
-	DB.Exec("ALTER TABLE IF EXISTS pedido_hamburgueres DROP CONSTRAINT IF EXISTS fk_pedido_hamburgueres_pedido")
-	DB.Exec("ALTER TABLE IF EXISTS pedido_hamburgueres DROP CONSTRAINT IF EXISTS fk_pedido_hamburgueres_hamburguer")
-	DB.Exec("DROP TABLE IF EXISTS pedido_hamburgueres CASCADE")
-
 	// Auto Migrate na ordem correta
 	DB.AutoMigrate(
 		&models.Role{},

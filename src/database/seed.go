@@ -4,7 +4,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/juliasilvamoura/auth-score/src/models"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -77,16 +76,14 @@ func SeedDB() {
 
 	debts := []models.Debt{
 		{
-			DebtID:       uuid.New(),
 			Value:        150.75,
 			MaturityDate: time.Now().AddDate(0, 3, 0),
-			UserID:       createdUsers[0].UserID, // Usa o ID do primeiro usuário criado
+			UserID:       createdUsers[0].UserID,
 		},
 		{
-			DebtID:       uuid.New(),
 			Value:        250.00,
 			MaturityDate: time.Now().AddDate(0, 6, 0),
-			UserID:       createdUsers[1].UserID, // Usa o ID do segundo usuário criado
+			UserID:       createdUsers[1].UserID,
 		},
 	}
 

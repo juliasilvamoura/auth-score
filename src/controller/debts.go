@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/juliasilvamoura/auth-score/src/database"
 	"github.com/juliasilvamoura/auth-score/src/models"
 )
@@ -65,9 +64,6 @@ func PostDebts(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Usuário não encontrado"})
 		return
 	}
-
-	// Gera um novo UUID para a dívida
-	debt.DebtID = uuid.New()
 
 	if err := database.DB.Create(&debt).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao criar dívida"})
