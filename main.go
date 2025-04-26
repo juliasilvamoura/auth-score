@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -16,8 +15,6 @@ func main() {
 	log.Println("Iniciando o servidor da API")
 
 	jwtKey := []byte(os.Getenv("JWT_SECRET"))
-
-	fmt.Println(jwtKey)
 
 	r := gin.Default()
 

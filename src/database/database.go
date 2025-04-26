@@ -15,25 +15,25 @@ var (
 )
 
 func ConnectDB() {
-	dsn := os.Getenv("DATABASE_URL")
+	dsn := os.Getenv("URL_DATABASE")
 	if dsn == "" {
-		dsn = "host=localhost user=root password=root dbname=auth_score port=5432 sslmode=disable"
+		log.Fatal("URL_DATABASE environment variable is not set")
 	}
 
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 	if err != nil {
-		log.Fatal("Erro ao conectar ao banco de dados:", err)
+		log.Fatal("Error connecting to database:", err)
 	}
 
-	// Auto Migrate na ordem correta
+	// Auto Migrate in correct order
 	DB.AutoMigrate(
 		&models.Role{},
 		&models.User{},
 		&models.Debt{},
 	)
 
-	// Habilita as foreign keys após a migração
+	// Enable foreign keys after migration
 	DB.Exec("SET CONSTRAINTS ALL IMMEDIATE")
 }
