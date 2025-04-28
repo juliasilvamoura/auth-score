@@ -1,7 +1,9 @@
 package database
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/juliasilvamoura/auth-score/src/models"
 	"gorm.io/driver/postgres"
@@ -14,7 +16,14 @@ var (
 )
 
 func ConnectDB() {
-	dsn := "host=localhost user=root password=root dbname=auth_score port=5432 sslmode=disable"
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	user := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	dbname := os.Getenv("DB_NAME")
+
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		host, user, password, dbname, port)
 
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
@@ -23,18 +32,14 @@ func ConnectDB() {
 		log.Fatal("Error connecting to database:", err)
 	}
 
-	// Enable UUID extension
 	if err := DB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"").Error; err != nil {
 		log.Fatal("Error enabling UUID extension:", err)
 	}
 
-	// Auto Migrate in correct order
 	DB.AutoMigrate(
 		&models.Role{},
 		&models.User{},
 		&models.Debt{},
 	)
-
-	// Enable foreign keys after migration
 	DB.Exec("SET CONSTRAINTS ALL IMMEDIATE")
 }

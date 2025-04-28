@@ -29,7 +29,6 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 
-		// Verifica se o token está na blacklist
 		if database.IsTokenBlacklisted(tokenString) {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido ou revogado"})
 			c.Abort()
@@ -51,7 +50,6 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// Verifica se o usuário ainda tem o mesmo role
 		var user models.User
 		if err := database.DB.First(&user, claims.UserID).Error; err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Usuário não encontrado"})
@@ -59,7 +57,6 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		if user.RoleID != claims.RoleID {
-			// Se o role mudou, invalida o token
 			database.AddToBlacklist(tokenString, jwt.NewNumericDate(claims.ExpiresAt.Time).Sub(time.Now()))
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Permissões do usuário foram alteradas. Por favor, faça login novamente"})
 			return

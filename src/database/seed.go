@@ -48,11 +48,9 @@ func SeedDB() {
 		},
 	}
 
-	// Array para armazenar os IDs dos usuários criados
 	var createdUsers []models.User
 
 	for _, user := range users {
-		// Hash da senha antes de salvar
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 		if err != nil {
 			log.Printf("Erro ao gerar hash da senha para usuário %s: %v\n", user.CPF, err)
@@ -65,11 +63,9 @@ func SeedDB() {
 			continue
 		}
 
-		// Adiciona o usuário criado ao array
 		createdUsers = append(createdUsers, user)
 	}
 
-	// Verifica se os usuários foram criados
 	if len(createdUsers) != 2 {
 		log.Println("Erro: Nem todos os usuários foram criados corretamente")
 		return

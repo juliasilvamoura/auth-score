@@ -1,5 +1,30 @@
 version: '3.8'
 services:
+  api:
+    container_name: auth-score-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=auth_score
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=your-secret-key
+      - PORT=8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - auth-network
+
   postgres:
     container_name: auth-score-postgres
     image: postgres:latest
@@ -14,6 +39,11 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - auth-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d auth_score"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     container_name: auth-score-redis

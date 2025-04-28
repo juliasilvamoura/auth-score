@@ -42,12 +42,13 @@ Install Go 1.23.2
 # Setup Instructions:
 <ul>
 <li>Run command: <i>go mod tidy</i> to install dependencies</li>
-<li>Run command: <i>docker-compose up -d</i> to start containers</li>
+<li>Run command: <i>docker-compose up -d redis postgres</i> to start containers</li>
 <li>Run command: <i>go run src/cmd/seed/main.go</i> to seed the database</li>
 <li>Run command: <i>go run .</i> to start the application</li>
 <li>Run command: <i>docker exec -it auth-score-redis redis-cli</i> to access Redis CLI</l>
 <li>Run command: <i>KEYS blacklist:*</i> to view blacklisted tokens</l>
 <li>Run command: <i>TTL blacklist:<token></i> to check token expiration time</l>
+<li>Run command: <i>docker-compose up --build</i> build aplication docker</l>
 </ul>
 
 The server will be available at `http://localhost:8080`. 

@@ -14,7 +14,12 @@ import (
 func main() {
 	log.Println("Iniciando o servidor da API")
 
+	_ = godotenv.Load()
+
 	jwtKey := []byte(os.Getenv("JWT_SECRET"))
+	if len(jwtKey) == 0 {
+		log.Fatal("JWT_SECRET não encontrado nas variáveis de ambiente")
+	}
 
 	r := gin.Default()
 
@@ -45,7 +50,6 @@ func main() {
 		c.Next()
 	})
 
-	// Adiciona o middleware de autenticação ao grupo auth, exceto para a rota de login
 	auth.Use(func(c *gin.Context) {
 		if c.FullPath() != "/auth/login" {
 			middleware.AuthMiddleware()(c)
@@ -55,11 +59,4 @@ func main() {
 	routes.HandleRequests(r, auth)
 
 	r.Run(":8080")
-}
-
-func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Erro ao carregar o arquivo .env")
-	}
 }
