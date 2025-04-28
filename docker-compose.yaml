@@ -15,7 +15,7 @@ services:
       - DB_NAME=auth_score
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - JWT_SECRET=your-secret-key
+      - JWT_SECRET=uJ3GR6iCmRgwmLHlBdJQ4GF+29rQ2Yz5x8dfc2q+xWY
       - PORT=8080
     depends_on:
       postgres:

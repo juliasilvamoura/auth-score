@@ -44,6 +44,7 @@ Install Go 1.23.2
 # Setup Instructions:
 <ul>
 <li>Run command: <i>go mod tidy</i> to install dependencies</li>
+<li>Create .env and add your-secret-keys in .env and docker-compose</li>
 <li>Run command: <i>docker-compose up -d redis postgres</i> to start containers</li>
 <li>Run command: <i>go run src/cmd/seed/main.go</i> to seed the database</li>
 <li>Run command: <i>go run .</i> to start the application</li>
