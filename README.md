@@ -32,6 +32,8 @@ The API provides a robust access control system where JWT tokens are automatical
   <li>Use GitHub for code storage</li>
   <li>Use PostgreSQL</li>
   <li>Use Docker</li>
+  <li>Use JWT</li>
+  <li>Use Redis</li>
 </ul>
 
 # Environment Prerequisites:
