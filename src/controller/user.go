@@ -34,7 +34,14 @@ func PostUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, user)
+	response := models.UserResponse{
+		CPF:       user.CPF,
+		Name:      user.Name,
+		Email:     user.Email,
+		BirthDate: user.BirthDate,
+	}
+
+	c.JSON(http.StatusCreated, response)
 }
 
 func UpdateUser(c *gin.Context) {

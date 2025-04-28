@@ -13,3 +13,10 @@ type User struct {
 	Password  string    `gorm:"not null" json:"password" binding:"required"`
 	RoleID    uint      `gorm:"not null" json:"role_id"`
 }
+
+type UserResponse struct {
+	CPF       string    `json:"cpf"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	BirthDate time.Time `json:"birth_date"`
+}

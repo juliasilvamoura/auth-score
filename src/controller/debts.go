@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/juliasilvamoura/auth-score/src/database"
 	"github.com/juliasilvamoura/auth-score/src/models"
 )
@@ -28,20 +29,27 @@ func GetAllDebts(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, debts)
+	var response []models.DebtResponse
+	for _, debt := range debts {
+		response = append(response, models.DebtResponse{
+			DebtID:       debt.DebtID,
+			Value:        debt.Value,
+			MaturityDate: debt.MaturityDate,
+		})
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 func PostDebts(c *gin.Context) {
 	var debt models.Debt
 
-	// Obtém o role do usuário
 	userRole, exists := c.Get("user_role")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuário não autenticado"})
 		return
 	}
 
-	// Converte o role para uint e verifica se é admin
 	userRoleUint, ok := userRole.(uint)
 	if !ok {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao verificar permissões do usuário"})
@@ -58,17 +66,24 @@ func PostDebts(c *gin.Context) {
 		return
 	}
 
-	// Verifica se o usuário existe
 	var user models.User
 	if err := database.DB.First(&user, debt.UserID).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Usuário não encontrado"})
 		return
 	}
 
+	debt.DebtID = uuid.New()
+
 	if err := database.DB.Create(&debt).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao criar dívida"})
 		return
 	}
 
-	c.JSON(http.StatusCreated, debt)
+	response := models.DebtResponse{
+		DebtID:       debt.DebtID,
+		Value:        debt.Value,
+		MaturityDate: debt.MaturityDate,
+	}
+
+	c.JSON(http.StatusCreated, response)
 }
