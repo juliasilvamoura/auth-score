@@ -15,9 +15,9 @@ var (
 
 func ConnectRedis() {
 	RedisClient = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379", // Redis default address
-		Password: "",               // no password set
-		DB:       0,                // use default DB
+		Addr:     "localhost:6379", 
+		Password: "",              
+		DB:       0,                
 	})
 
 	// Ping Redis to check connection
@@ -29,12 +29,10 @@ func ConnectRedis() {
 	log.Println("Conectado ao Redis com sucesso!")
 }
 
-// AddToBlacklist adiciona um token à blacklist
 func AddToBlacklist(token string, expiration time.Duration) error {
 	return RedisClient.Set(Ctx, "blacklist:"+token, true, expiration).Err()
 }
 
-// IsTokenBlacklisted verifica se um token está na blacklist
 func IsTokenBlacklisted(token string) bool {
 	_, err := RedisClient.Get(Ctx, "blacklist:"+token).Result()
 	return err == nil // se não houver erro, o token está na blacklist
