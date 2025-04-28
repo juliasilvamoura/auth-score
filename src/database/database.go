@@ -28,13 +28,11 @@ func ConnectDB() {
 		log.Fatal("Error enabling UUID extension:", err)
 	}
 
-	// Auto Migrate in correct order
 	DB.AutoMigrate(
 		&models.Role{},
 		&models.User{},
 		&models.Debt{},
 	)
 
-	// Enable foreign keys after migration
 	DB.Exec("SET CONSTRAINTS ALL IMMEDIATE")
 }
